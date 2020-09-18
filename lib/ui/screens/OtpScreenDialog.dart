@@ -258,7 +258,7 @@ class _OtpScreenDialogState extends State<OtpScreenDialog > with SingleTickerPro
     totalTimeInSeconds = time;
     super.initState();
     _controller =
-    AnimationController(vsync: this, duration: Duration(seconds: time))
+    AnimationController(duration: Duration(seconds: time), vsync: this)
       ..addStatusListener((status) {
         if (status == AnimationStatus.dismissed) {
           setState(() {

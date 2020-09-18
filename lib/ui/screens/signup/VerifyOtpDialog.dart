@@ -123,7 +123,7 @@ class _VerifyOtpDialogState extends State<VerifyOtpDialog> {
                     child: TextFormField(
                   controller: _otpController,
                   keyboardType: TextInputType.text,
-                  decoration: InputDecoration(labelText: "Enter Otp"),
+                  decoration: InputDecoration(labelText: "Enter OTP"),
                 )),
                 SizedBox(
                   height: 40,

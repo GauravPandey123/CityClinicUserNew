@@ -4,13 +4,14 @@ import 'package:city_clinic_user/ui/screens/updateprofilesignup/bloc/UpdateProfi
 import 'package:city_clinic_user/utils/AppImages.dart';
 import 'package:city_clinic_user/utils/AppUtils.dart';
 import 'package:city_clinic_user/utils/appcolors.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_date_picker/rounded_picker.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
 class ProfileDetailsAbout extends StatefulWidget {
+  User user;
+  ProfileDetailsAbout(this.user);
   @override
   _ProfileDetailsAboutState createState() => _ProfileDetailsAboutState();
 }
@@ -18,16 +19,33 @@ class ProfileDetailsAbout extends StatefulWidget {
 class _ProfileDetailsAboutState extends State<ProfileDetailsAbout> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   GlobalKey<ScaffoldState> _globalKey = GlobalKey();
+
+  TextEditingController selectedDateTextField = TextEditingController();
+  String selectedDate;
+  String genderValue = "female";
+
+  List<String> _dropdownItems = [
+    "Mehrauli", "Bankner", "Bhor Garh", "Tikri Khurd", "Tukhmirpur",
+    "Begum Pur", "Bakkar Wala", "Fatehpur Ber", "Saidul Azaib", "Tigri",
+    "Kotla Mahigiran", "Sultanpur"
+  ];
+  List<String> _countryDropDownItems = ["India", "USA", "Columbia"];
+  List<String> _nationalityDropDownItems = ['Indian', 'Australian', 'Algerian'];
+  String _selectedCity, _selectedCountry, _selectedNationality;
+
+
   final UpdateProfileDetailBloc _updateProfileDetailBloc =
       UpdateProfileDetailBloc();
-  DateTime selectedDate = DateTime.now();
+  DateTime currentDate = DateTime.now();
   var myFormat = DateFormat('yyyy-MM-dd');
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _mobileController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passXYZIDController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _heightController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
+  final TextEditingController _localityController = TextEditingController();
   final TextEditingController _addressline1Controller = TextEditingController();
   final TextEditingController _addressline2Controller = TextEditingController();
   final TextEditingController _selectCityController = TextEditingController();
@@ -37,6 +55,14 @@ class _ProfileDetailsAboutState extends State<ProfileDetailsAbout> {
   @override
   void initState() {
     super.initState();
+
+setState(() {
+  selectedDateTextField.text = "${myFormat.format(currentDate)}";
+  selectedDate = myFormat.format(currentDate);
+  _selectedCity = _dropdownItems[0];
+  _selectedCountry = _countryDropDownItems[0];
+  _selectedNationality = _nationalityDropDownItems[0];
+});
     _updateProfileDetailBloc.updateProfileStream.listen((event) {
       if (event.user != null) {
         Navigator.pushReplacement(
@@ -90,6 +116,63 @@ class _ProfileDetailsAboutState extends State<ProfileDetailsAbout> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
+                        Container(
+                          width: double.infinity,
+                          height: 160,
+                          child: Stack(
+                            children: [
+                              /*Positioned(
+                                  child: Container(
+                                    height: 180,
+                                    decoration: BoxDecoration(
+                                        color: Color(0xFFF2F2F2), //new Color.fromRGBO(255, 0, 0, 0.0),
+                                        borderRadius: new BorderRadius.all(Radius.circular(8.0))
+                                    ),
+                                    child: Stack(
+                                      //alignment:new Alignment(x, y)
+                                      children: <Widget>[
+                                        Positioned(
+                                          child: Center(
+                                            child: SvgPicture.asset(doctorBannerBGImage, height:48, width:48,),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          child: new Align(
+                                              alignment: FractionalOffset.bottomCenter,
+                                              child: Container(
+                                                height: 32,
+                                                decoration: BoxDecoration(
+                                                    color: Color(0xFF777777), //new Color.fromRGBO(255, 0, 0, 0.0),
+                                                    borderRadius: new BorderRadius.only(
+                                                        bottomLeft:Radius.circular(8.0),
+                                                        bottomRight: Radius.circular(8.0))
+                                                ),
+                                                child:  Center(
+                                                  child: Icon(Icons.camera_alt_outlined, color: Colors.white,size: 18,),
+                                                ),
+                                              )
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )),*/
+                              Positioned(
+                                child: Align(
+                                  alignment: FractionalOffset.center,
+                                  child: Container(
+                                    width: 120,
+                                    height: 120,
+                                    margin: EdgeInsets.only(right: 8),
+                                    color: Color(0xFFF2F2F2),
+                                    child: Center(
+                                      child: SvgPicture.asset(home_account, height:40, width:40,),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         TextFormField(
                           controller: _nameController,
                           cursorColor: Colors.black,
@@ -166,6 +249,26 @@ class _ProfileDetailsAboutState extends State<ProfileDetailsAbout> {
                             return null;
                           },
                         ),
+                        SizedBox(
+                          height: 14,
+                        ),
+                        TextFormField(
+                          controller: _passXYZIDController,
+                          cursorColor: Colors.black,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            labelText: "Passport / Civil ID",
+                            hintStyle: TextStyle(color: Colors.grey),
+                            filled: true,
+                            fillColor: Colors.white70,
+                          ),
+                          validator: (v) {
+                            if (v.isEmpty) {
+                              return 'Passport / Civil ID is required';
+                            }
+                            return null;
+                          },
+                        ),
                         Container(
                           margin: EdgeInsets.only(top: 14.0),
                           padding: EdgeInsets.all(10.0),
@@ -181,42 +284,58 @@ class _ProfileDetailsAboutState extends State<ProfileDetailsAbout> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Expanded(
-                                child: Container(
-                              margin: EdgeInsets.only(top: 10.0),
-                              padding: EdgeInsets.all(10.0),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 2, color: blueTextColor),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20))),
-                              child: Text(
-                                "Male",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: blueTextColor,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            )),
+                                child: InkWell(
+                                  child: Container(
+                                    margin: EdgeInsets.only(top: 10.0),
+                                    padding: EdgeInsets.all(10.0),
+                                    decoration: BoxDecoration(
+                                        color: genderValue == "male"?blueTextColor:Colors.transparent,
+                                        border: Border.all(
+                                            width: 1, color: genderValue == "male"?Colors.transparent:blueTextColor),
+                                        borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                    child: Text(
+                                      "Male",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: genderValue == "male"?Colors.white:blueTextColor,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onTap: (){
+                                    setState(() {
+                                      genderValue = "male";
+                                    });
+                                  },
+                                )),
                             SizedBox(width: 20),
                             Expanded(
-                                child: Container(
-                              margin: EdgeInsets.only(top: 10.0),
-                              padding: EdgeInsets.all(10.0),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 2, color: blueTextColor),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20))),
-                              child: Text(
-                                "Female",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: blueTextColor,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            )),
+                                child: InkWell(
+                                  child: Container(
+                                    margin: EdgeInsets.only(top: 10.0),
+                                    padding: EdgeInsets.all(10.0),
+                                    decoration: BoxDecoration(
+                                        color: genderValue == "female"?blueTextColor:Colors.transparent,
+                                        border: Border.all(
+                                            width: 1, color: genderValue == "female"?Colors.transparent:blueTextColor),
+                                        borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                    child: Text(
+                                      "Female",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: genderValue == "female"?Colors.white:blueTextColor,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onTap: (){
+                                    setState(() {
+                                      genderValue = "female";
+                                    });
+                                  },
+                                )),
                           ],
                         ),
                         SizedBox(height: 14),
@@ -225,49 +344,107 @@ class _ProfileDetailsAboutState extends State<ProfileDetailsAbout> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
                               SizedBox(height: 10),
-                              TextFormField(
-                                controller: _dateController,
-                                cursorColor: Colors.black,
-                                keyboardType: TextInputType.text,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(padding: EdgeInsets.only(left: 8),
+                                    child: Text("Date of Birth",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 16
+                                      ),),),
+                                  SizedBox(height: 8,),
+                                  Container(
+                                    child: Stack(
+                                      alignment: Alignment.centerRight,
+                                      children: <Widget>[
+                                        TextFormField(
+                                          // enabled: false,
+                                            controller: selectedDateTextField,
+                                            keyboardType: TextInputType.datetime,
+                                            style: Theme.of(context).textTheme.body1,
+                                            // obscureText: true,
+                                            decoration: InputDecoration(
+                                                contentPadding: const EdgeInsets.fromLTRB(12, 6, 48, 6),
+                                                border: OutlineInputBorder(
+                                                  borderRadius: const BorderRadius.all(
+                                                    const Radius.circular(25.0),
+                                                  ),
+                                                ),
+                                                filled: true,
+                                                hintStyle: new TextStyle(color: Colors.grey[800]),
+                                                hintText: "-Select Date-",
+                                                fillColor: Colors.white70)
+                                        ),
+                                        IconButton(
+                                          icon: Icon(Icons.calendar_today, color: blueTextColor),
+                                          onPressed: () async{
+                                            DateTime toDate = DateTime(1960);
+                                            FocusScope.of(context).requestFocus(new FocusNode());
 
-                                decoration: InputDecoration(
-                                  labelText: " - Select Date - ",
-                                  hintStyle: TextStyle(color: Colors.grey),
+                                            toDate = await showDatePicker(
+                                                context: context,
+                                                initialDate:DateTime.now(),
+                                                firstDate:DateTime(1960),
+                                                lastDate: DateTime(2025));
 
-                                  filled: true,
-                                  suffixIcon: IconButton(
-                                    icon: new Icon(
-                                      Icons.date_range,
+                                            if (toDate != null) /* && date != selectedDate*/
+                                              setState(() {
+                                                selectedDate = myFormat.format(toDate);
+                                                print(selectedDate);
+                                                selectedDateTextField.text = selectedDate;
+                                              });
+                                          },
+                                        ),
+                                      ],
                                     ),
-                                    onPressed: () async {
-                                      DateTime date = DateTime(1900);
-                                      FocusScope.of(context)
-                                          .requestFocus(new FocusNode());
+                                  )
 
-                                      date = await showDatePicker(
-                                          context: context,
-                                          initialDate: DateTime.now(),
-                                          firstDate: DateTime(1900),
-                                          lastDate: DateTime(2100));
-
-                                      if (date != null && date != selectedDate)
-                                        setState(() {
-                                          selectedDate = date;
-                                          print(
-                                              '${myFormat.format(selectedDate)}');
-                                          _dateController.text =
-                                              '${myFormat.format(selectedDate)}';
-                                        });
-                                    },
-                                  ),
-                                  fillColor: Colors.white70,
+                                ],
+                              ),
+                              SizedBox(height: 20,),
+                              Container(
+                                child:  Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(left: 8),
+                                      child: Text("Nationality", /*textDirection: TextDirection.ltr,*/
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontFamily: 'Poppins',
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black),
+                                      ),
+                                    ),
+                                    SizedBox(height: 6,),
+                                    Container(
+                                      width: double.infinity,
+                                      padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(25.0),
+                                          color: Color(0xFFF2F2F2),
+                                          border: Border.all(width: 1, color: Colors.grey)),
+                                      child: DropdownButtonHideUnderline(
+                                        child: DropdownButton<String>(
+                                            value: _selectedNationality,
+                                            items: _nationalityDropDownItems.map((location) {
+                                              return DropdownMenuItem(
+                                                child: new Text(location),
+                                                value: location,
+                                              );
+                                            }).toList(),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _selectedNationality = value;
+                                              });
+                                            }),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                validator: (v) {
-                                  if (v.isEmpty) {
-                                    return 'Date of birth is required';
-                                  }
-                                  return null;
-                                },
                               ),
                               SizedBox(height: 10),
                               TextFormField(
@@ -343,39 +520,105 @@ class _ProfileDetailsAboutState extends State<ProfileDetailsAbout> {
                               ),
                               SizedBox(height: 10),
                               TextFormField(
-                                controller: _selectCityController,
+                                controller: _localityController,
                                 cursorColor: Colors.black,
                                 keyboardType: TextInputType.text,
                                 decoration: InputDecoration(
-                                  labelText: "Select City",
+                                  labelText: "Area/Locality",
                                   hintStyle: TextStyle(color: Colors.grey),
                                   filled: true,
                                   fillColor: Colors.white70,
                                 ),
                                 validator: (v) {
                                   if (v.isEmpty) {
-                                    return 'City is required';
+                                    return 'Area/Locality is required';
                                   }
                                   return null;
                                 },
                               ),
-                              SizedBox(height: 10),
-                              TextFormField(
-                                controller: _selectCountryController,
-                                cursorColor: Colors.black,
-                                keyboardType: TextInputType.text,
-                                decoration: InputDecoration(
-                                  hintText: "Select Country",
-                                  hintStyle: TextStyle(color: Colors.grey),
-                                  filled: true,
-                                  fillColor: Colors.white70,
+                              SizedBox(height: 20,),
+                              Container(
+                                child:  Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(left: 8),
+                                      child: Text("Select City", /*textDirection: TextDirection.ltr,*/
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontFamily: 'Poppins',
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black),
+                                      ),
+                                    ),
+                                    SizedBox(height: 6,),
+                                    Container(
+                                      width: double.infinity,
+                                      padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(25.0),
+                                          color: Color(0xFFF2F2F2),
+                                          border: Border.all(width: 1, color: Colors.grey)),
+                                      child: DropdownButtonHideUnderline(
+                                        child: DropdownButton<String>(
+                                            value: _selectedCity,
+                                            items: _dropdownItems.map((location) {
+                                              return DropdownMenuItem(
+                                                child: new Text(location),
+                                                value: location,
+                                              );
+                                            }).toList(),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _selectedCity = value;
+                                              });
+                                            }),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                validator: (v) {
-                                  if (v.isEmpty) {
-                                    return 'Country is required';
-                                  }
-                                  return null;
-                                },
+                              ),
+                              SizedBox(height: 20,),
+                              Container(
+                                child:  Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(left: 8),
+                                      child: Text("Select City", /*textDirection: TextDirection.ltr,*/
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontFamily: 'Poppins',
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black),
+                                      ),
+                                    ),
+                                    SizedBox(height: 6,),
+                                    Container(
+                                      width: double.infinity,
+                                      padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(25.0),
+                                          color: Color(0xFFF2F2F2),
+                                          border: Border.all(width: 1, color: Colors.grey)),
+                                      child: DropdownButtonHideUnderline(
+                                        child: DropdownButton<String>(
+                                            value: _selectedCountry,
+                                            items: _countryDropDownItems.map((location) {
+                                              return DropdownMenuItem(
+                                                child: new Text(location),
+                                                value: location,
+                                              );
+                                            }).toList(),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                _selectedCountry = value;
+                                              });
+                                            }),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                               SizedBox(height: 30),
                               FlatButton(
@@ -386,22 +629,22 @@ class _ProfileDetailsAboutState extends State<ProfileDetailsAbout> {
                                 onPressed: () {
                                   if (_formKey.currentState.validate()) {
                                     _updateProfileDetailBloc.updateProfileData(
-                                        "abc",
-                                        "abc@gmail.com",
-                                        "9953502690",
-                                        "Male",
-                                        "1993-05-04",
-                                        "1",
-                                        "1",
-                                        "5.6",
-                                        "12",
-                                        "C12 Rama Park",
-                                        "Dwarka",
-                                        "Dwarka",
-                                        "1",
-                                        "1",
-                                        "8287265605ea241eae622f3.19777511",
-                                        "2");
+                                        _nameController.text.toString(),
+                                        _emailController.text.toString(),
+                                        _mobileController.text.toString(),
+                                        genderValue,
+                                        selectedDate.toString(),
+                                        _passXYZIDController.text.toString(),
+                                        _selectedNationality,
+                                        _heightController.text.toString(),
+                                        _weightController.text.toString(),
+                                        _addressline1Controller.text.toString(),
+                                        _addressline2Controller.text.toString(),
+                                        _localityController.text.toString(),
+                                        _selectedCountry,
+                                        _selectedCity,
+                                        widget.user.accessToken.toString(),
+                                        widget.user.userId.toString());
                                   }
                                 },
                                 child: Text(

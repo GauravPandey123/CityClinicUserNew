@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primaryColor: blueTextColor,
         ),
-        home: ProfileDetails());
+        home: SignUp());
   }
 }
 

@@ -1,4 +1,5 @@
 import 'package:city_clinic_user/model/verifyotp/verify_otp_response.dart';
+import 'package:city_clinic_user/ui/screens/BottomTabsScreen.dart';
 import 'package:city_clinic_user/ui/screens/updateprofilesignup/ProfileDeatilsAbout.dart';
 import 'package:city_clinic_user/utils/appcolors.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,6 +23,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: DefaultTabController(
         length: 2,
         child: Scaffold(
@@ -32,16 +34,29 @@ class _ProfileDetailsState extends State<ProfileDetails> {
               style: TextStyle(fontSize: 18.0, color: Colors.white),
             ),
             actions: [
-              FlatButton(
-                  onPressed: null,
-                  height: 30,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                      side: BorderSide(color: Colors.white)),
-                  child: Text(
-                    "Skip",
-                    style: TextStyle(fontSize:16.0,color: Colors.white),
-                  ))
+
+              Padding(padding: EdgeInsets.all(12),
+              child: InkWell(
+                onTap: (){
+                  Navigator.pushReplacement(
+                      context, MaterialPageRoute(builder: (_) => BottomTabsScreen()));
+                },
+                child: Container(
+                  width: 80,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25.0),
+                      border: Border.all(color: Colors.white)
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Skip",
+                      style: TextStyle(fontSize:14.0,
+                          fontWeight: FontWeight.w700
+                          ,color: Colors.white),
+                    ),
+                  ),
+                ),
+              ))
             ],
             bottom: TabBar(
               labelColor: Colors.white,
@@ -56,7 +71,7 @@ class _ProfileDetailsState extends State<ProfileDetails> {
             ),
           ),
           body: TabBarView(
-            children: [ProfileDetailsAbout(), ProfileFamilyAddDetail()],
+            children: [ProfileDetailsAbout(widget.user), ProfileFamilyAddDetail()],
           ),
         ),
       ),

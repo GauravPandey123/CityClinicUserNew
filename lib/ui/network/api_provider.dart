@@ -32,6 +32,8 @@ class ApiProvider {
       "longitude": longitude,
       "latitude": latitude
     };
+
+    print("signup -> $map");
     try {
       Response response = await _dioClient.post('/signup', data: map);
       print(response.data);
@@ -129,14 +131,15 @@ class ApiProvider {
       String address_2,
       String locality,
       String country_id,
-      String city_id,String userId,String accessToken) async {
+      String city_id, accesstoken,
+      Userid) async {
       final Dio _dioClientHeader = Dio(BaseOptions(
         baseUrl: 'http://projects.adsandurl.com/cityclinics/api',
         headers: {
           'Appversion': '1.0',
           'Ostype': Platform.isAndroid ? 'ANDRIOD' : 'ios',
-          'Userid' : userId,
-          'Accesstoken' : accessToken
+          'Userid' : Userid,
+          'Accesstoken' : accesstoken
         }));
 
     final map = {
@@ -155,6 +158,9 @@ class ApiProvider {
       "country_id" : country_id,
       "city_id" : city_id
     };
+
+      print("userID -> ${Userid} :: accessToken -> ${accesstoken} :: map -> $map");
+
     try {
       Response response = await _dioClientHeader.put('/profile', data: map);
       var data = json.decode(response.toString());
@@ -168,7 +174,7 @@ class ApiProvider {
       if (error is DioError) {
         e = getErrorMsg(e.type);
       }
-      return e;
+      return PersonalProfileResponse.fromJson(e);
     }
   }
 

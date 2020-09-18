@@ -44,4 +44,5 @@ const String videoChatIcon = "assets/images/video.svg";
 const String audioConsultIcon = "assets/images/audio_consult.svg";
 const String NO_INTERNET = 'assets/images/no_internet.svg';
 
+const String home_account = 'assets/images/home_account.svg';
 
