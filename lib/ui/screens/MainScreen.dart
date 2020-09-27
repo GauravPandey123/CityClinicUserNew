@@ -1,6 +1,17 @@
+import 'dart:collection';
+
+import 'package:city_clinic_user/ui/screens/Cart.dart';
 import 'package:city_clinic_user/ui/screens/Dashboard.dart';
+import 'package:city_clinic_user/ui/screens/Orders.dart';
+import 'package:city_clinic_user/ui/screens/Search.dart';
+import 'package:city_clinic_user/ui/screens/User_Profiles.dart';
+import 'package:city_clinic_user/utils/AppImages.dart';
+import 'package:city_clinic_user/utils/appcolors.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:city_clinic_user/ui/screens/notifications/Notifications.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -8,7 +19,122 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  PageController _pageController;
+
+  final GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
+  ListQueue<int> _navigationQueue = ListQueue();
+  int _selectedIndex = 0;
+
+  List<String> _bottomPagesTitle = [
+    "City Clinic", "My Order", "Search", "My Cart", "My Profile"
+  ];
+
+  List<Widget> _widgetOptions = <Widget>[
+    Dashboard(),
+    Orders(),
+    Search(),
+    Cart(),
+    UserProfiles()
+  ];
+
+
+  @override
+  Widget build(BuildContext context) {
+    return  WillPopScope(child: Scaffold (
+      backgroundColor: Colors.white,
+      key: _globalKey,
+      appBar: AppBar(
+          backgroundColor: kPrimaryColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(14),
+            ),
+          ),
+          leading: IconButton(
+            icon: Icon(Icons.menu, color: Colors.white,),
+            onPressed: (){
+              _globalKey.currentState.openDrawer();
+            },
+          ),
+          title: Text(_bottomPagesTitle.elementAt(_selectedIndex),
+            style: TextStyle(
+                fontSize: 18
+            ),),
+          //Ternery operator use for condition check
+          elevation:
+          defaultTargetPlatform == TargetPlatform.android ? 5.0 : 0.0,
+          centerTitle: _selectedIndex == 0 ? true : false,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.notifications_none,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => Notifications()));
+              },
+            )
+          ]),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        type: BottomNavigationBarType.shifting,
+        backgroundColor: Colors.white,
+        elevation: 16,
+        selectedItemColor: kPrimaryColor,
+        unselectedItemColor: kAuthTextGreyColor,
+        items: [
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(homeImage, height:24, width:24),
+            activeIcon: SvgPicture.asset(homeImage, height:24, width:24, color: kPrimaryColor,),
+            title: Text("Home"),
+          ),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(orderImage, height:24, width:24),
+            activeIcon: SvgPicture.asset(orderImage, height:24, width:24, color: kPrimaryColor,),
+            title: Text("Orders"),),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(searchImage, height:24, width:24),
+            activeIcon: SvgPicture.asset(searchImage, height:24, width:24, color: kPrimaryColor,),
+            title: Text("Search"),),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(cartImage, height:24, width:24),
+            activeIcon: SvgPicture.asset(cartImage, height:24, width:24, color: kPrimaryColor,),
+            title: Text("My Cart"),),
+          BottomNavigationBarItem(
+            icon: SvgPicture.asset(profile1Image, height:24, width:24),
+            activeIcon: SvgPicture.asset(profile1Image, height:24, width:24, color: kPrimaryColor,),
+            title: Text("My Profile"),),
+        ],
+        onTap: onTabTapped,
+
+      ),
+      body: _widgetOptions.elementAt(_selectedIndex),
+    ),
+        onWillPop: () async{
+          if(_navigationQueue.isEmpty)
+            return true;
+
+          setState(() {
+            _selectedIndex = _navigationQueue.last;
+            _navigationQueue.removeLast();
+          });
+          return false;
+        });
+
+  }
+
+  //dashboard screen onTabTapped
+  void onTabTapped(int index) {
+    _navigationQueue.addLast(index);
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+ /*
+   PageController _pageController;
   int _page = 0;
   List icons = [
     Icons.home,
@@ -18,39 +144,7 @@ class _MainScreenState extends State<MainScreen> {
     Icons.person,
   ];
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageView(
-          physics: NeverScrollableScrollPhysics(),
-          controller: _pageController,
-          onPageChanged: onPageChanged,
-          children: List.generate(5, (index) => Dashboard()
-          )
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            SizedBox(width: 7),
-            buildTabIcon(0),
-            buildTabIcon(1),
-            buildTabIcon(2),
-            buildTabIcon(3),
-            buildTabIcon(4),
-            SizedBox(width: 7),
-          ],
-        ),
-        color: Theme
-            .of(context)
-            .primaryColor,
-        shape: CircularNotchedRectangle(),
-      ),
 
-    );
-
-  }
 
   void onPageChanged(int page) {
     setState(() {
@@ -86,6 +180,6 @@ class _MainScreenState extends State<MainScreen> {
         onPressed: () => _pageController.jumpToPage(index),
       );
     }
-  }
+  }*/
 
 }

@@ -643,8 +643,11 @@ setState(() {
                                         _localityController.text.toString(),
                                         _selectedCountry,
                                         _selectedCity,
-                                        widget.user.accessToken.toString(),
-                                        widget.user.userId.toString());
+                                      "kjkljlk", "13"
+                                        );
+
+                                    /*widget.user.accessToken.toString(),
+                                        widget.user.userId.toString()*/
                                   }
                                 },
                                 child: Text(

@@ -163,9 +163,9 @@ class ApiProvider {
 
     try {
       Response response = await _dioClientHeader.put('/profile', data: map);
-      var data = json.decode(response.toString());
-      if (data['success'] == true)
-        return PersonalProfileResponse.fromJson(data);
+      dynamic json = jsonDecode(response.toString());
+      if (json['success'] == true)
+        return PersonalProfileResponse.fromJson(json);
       else
         return PersonalProfileResponse.fromJson(response.data['message']);
     } catch (error, stacktrace) {
