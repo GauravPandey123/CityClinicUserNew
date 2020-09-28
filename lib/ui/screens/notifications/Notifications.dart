@@ -1,35 +1,46 @@
+import 'package:city_clinic_user/utils/appcolors.dart';
 import 'package:city_clinic_user/widget/NoitficationItem.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
-class Notification extends StatefulWidget {
+class Notifications extends StatefulWidget {
   @override
-  _State createState() => _State();
+  _NotificationsState createState() => _NotificationsState();
 }
 
-class _State extends State<Notification> {
+class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: double.infinity,
-      width: double.infinity,
-      child: ListView(
-        children: <Widget>[buildNotificationData(context)],
+    return Scaffold(
+      appBar: AppBar(
+          backgroundColor: kPrimaryColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(14),
+            ),
+          ),
+          title: Text("Notifications"),
+          //Ternery operator use for condition check
+          elevation: defaultTargetPlatform == TargetPlatform.android ? 5.0 : 0.0,
+          centerTitle: false,
+          leading: new IconButton(
+            icon: new Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )
+      ),
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        child: ListView.builder(
+            scrollDirection: Axis.vertical,
+            primary: true,
+            itemCount: 10,
+            itemBuilder: (BuildContext context, int index) {
+              return NotificationItem();
+            }),
       ),
     );
   }
-}
-
-buildNotificationData(BuildContext context) {
-  return Container(
-    child: ListView.builder(
-      primary: false,
-      shrinkWrap: true,
-      scrollDirection: Axis.vertical,
-      itemCount: 10,
-      itemBuilder: (BuildContext context, int index) {
-        return NotificationItem();
-      },
-    ),
-  );
-  // return Scaffold(
 }

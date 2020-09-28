@@ -24,29 +24,29 @@ class _DashBoardScreenState extends State<Dashboard> {
         body: SafeArea(
             child: SingleChildScrollView(
       child: Container(
-        margin: EdgeInsets.all(10.0),
+        margin: EdgeInsets.all(4.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              height: 220,
+              height: 180,
               width: MediaQuery.of(context).size.width,
               child: Image.asset(
                 "assets/images/city_clinic_image.png",
                 fit: BoxFit.fill,
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 16),
             Text(
               "What are you looking for?",
               textAlign: TextAlign.start,
               style: TextStyle(
-                fontSize: 18.0,
+                fontSize: 16.0,
                 color: blueTextColor,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 6),
             Wrap(
               children: <Widget>[
                 Row(
