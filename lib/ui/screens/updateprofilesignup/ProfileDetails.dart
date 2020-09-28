@@ -1,4 +1,4 @@
-import 'package:city_clinic_user/model/verifyotp/verify_otp_response.dart';
+import 'package:city_clinic_user/model/verifyotp/VerifyOtpResponse.dart';
 import 'package:city_clinic_user/ui/screens/BottomTabsScreen.dart';
 import 'package:city_clinic_user/ui/screens/updateprofilesignup/ProfileDeatilsAbout.dart';
 import 'package:city_clinic_user/utils/appcolors.dart';

@@ -1,7 +1,7 @@
 import 'package:city_clinic_user/model/login/response/LoginResponse.dart';
 import 'package:city_clinic_user/model/signup/reposne/signup_response.dart';
 import 'package:city_clinic_user/model/updateprofile/response/PersonalProfileResponse.dart';
-import 'package:city_clinic_user/model/verifyotp/verify_otp_response.dart';
+import 'package:city_clinic_user/model/verifyotp/VerifyOtpResponse.dart';
 import 'package:city_clinic_user/ui/network/api_provider.dart';
 
 class Repository {

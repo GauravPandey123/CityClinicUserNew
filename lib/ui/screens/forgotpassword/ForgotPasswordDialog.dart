@@ -1,4 +1,4 @@
-import 'package:city_clinic_user/ui/screens/ResetPasswordDialog.dart';
+import 'package:city_clinic_user/ui/screens/forgotpassword/ResetPasswordDialog.dart';
 import 'package:city_clinic_user/utils/appcolors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

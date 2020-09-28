@@ -1,4 +1,4 @@
- import 'package:city_clinic_user/model/verifyotp/verify_otp_response.dart';
+ import 'package:city_clinic_user/model/verifyotp/VerifyOtpResponse.dart';
 import 'package:city_clinic_user/ui/screens/repository/base.dart';
 import 'package:rxdart/rxdart.dart';
 

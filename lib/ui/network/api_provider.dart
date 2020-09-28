@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:city_clinic_user/model/forgotpassword/response/ForgotPasswordResponse.dart';
 import 'package:city_clinic_user/model/login/response/LoginResponse.dart';
+import 'package:city_clinic_user/model/resetpasswordresponse/response/ResetPasswordResponse.dart';
 import 'package:city_clinic_user/model/signup/reposne/signup_response.dart';
 import 'package:city_clinic_user/model/updateprofile/response/PersonalProfileResponse.dart';
-import 'package:city_clinic_user/model/verifyotp/verify_otp_response.dart';
-import 'package:city_clinic_user/utils/AppUtils.dart';
+import 'package:city_clinic_user/model/verifyotp/VerifyOtpResponse.dart';
+import 'package:city_clinic_user/model/verifyotpforgotpasswordresponse/response/ForgotVerifyPasswordResponse.dart';
 import 'package:dio/dio.dart';
 
 class ApiProvider {
@@ -83,15 +85,14 @@ class ApiProvider {
     }
   }
 
-  Future<VerifyOtpResponse> verifyOtpResponse(
-      String user_otp_log_id, String phone_number, String otp,String userid) async {
-
+  Future<VerifyOtpResponse> verifyOtpResponse(String user_otp_log_id,
+      String phone_number, String otp, String userid) async {
     final Dio _dioClientHeader = Dio(BaseOptions(
         baseUrl: 'http://projects.adsandurl.com/cityclinics/api',
         headers: {
           'Appversion': '1.0',
           'Ostype': Platform.isAndroid ? 'ANDRIOD' : 'ios',
-          'Userid' : userid
+          'Userid': userid
         }));
 
     final map = {
@@ -116,7 +117,6 @@ class ApiProvider {
     }
   }
 
-
   Future<PersonalProfileResponse> updateProfileResponse(
       String name,
       String email,
@@ -131,35 +131,37 @@ class ApiProvider {
       String address_2,
       String locality,
       String country_id,
-      String city_id, accesstoken,
+      String city_id,
+      accesstoken,
       Userid) async {
-      final Dio _dioClientHeader = Dio(BaseOptions(
+    final Dio _dioClientHeader = Dio(BaseOptions(
         baseUrl: 'http://projects.adsandurl.com/cityclinics/api',
         headers: {
           'Appversion': '1.0',
           'Ostype': Platform.isAndroid ? 'ANDRIOD' : 'ios',
-          'Userid' : Userid,
-          'Accesstoken' : accesstoken
+          'Userid': Userid,
+          'Accesstoken': accesstoken
         }));
 
     final map = {
       "name": name,
       "email": email,
       "phone_number": phone_number,
-      "gender" : gender,
-      "dob" : dob,
-      "pas_xyz_id" : pas_xyz_id,
-      "nationality_id" : nationality_id,
-      "height" : height,
-      "weight" : weight,
-      "address_1" : address_1,
-      "address_2" : address_2,
-      "locality" :  locality,
-      "country_id" : country_id,
-      "city_id" : city_id
+      "gender": gender,
+      "dob": dob,
+      "pas_xyz_id": pas_xyz_id,
+      "nationality_id": nationality_id,
+      "height": height,
+      "weight": weight,
+      "address_1": address_1,
+      "address_2": address_2,
+      "locality": locality,
+      "country_id": country_id,
+      "city_id": city_id
     };
 
-      print("userID -> ${Userid} :: accessToken -> ${accesstoken} :: map -> $map");
+    print(
+        "userID -> ${Userid} :: accessToken -> ${accesstoken} :: map -> $map");
 
     try {
       Response response = await _dioClientHeader.put('/profile', data: map);
@@ -177,6 +179,72 @@ class ApiProvider {
       return PersonalProfileResponse.fromJson(e);
     }
   }
+
+  Future<ForgotPasswordResponse> forgotPasswordResponse(
+      String userCred, String type) async {
+    final map = {"user_cred": userCred, "type": type};
+    try {
+      Response response = await _dioClient.put("/userforgot", data: map);
+      var data = json.decode(response.toString());
+      if (data['success'] == true)
+        return ForgotPasswordResponse.fromJson(data);
+      else
+        return ForgotPasswordResponse.fromJson(response.data['message']);
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      var e = error;
+      if (error is DioError) {
+        e = getErrorMsg(e.type);
+      }
+    }
+  }
+
+  Future<ForgotVerifyPasswordResponse> forgotVerifyOtpResponse(
+      String resultForgotId, String userCred, String otp) async {
+    final map = {
+      "result_forgot_log_id": resultForgotId,
+      "user_cred": userCred,
+      "otp": otp
+    };
+
+    try {
+      Response response =
+          await _dioClient.post("/userforgotverifyotp", data: map);
+      var data = json.decode(response.toString());
+      if (data['success'] == true)
+        return ForgotVerifyPasswordResponse.fromJson(data);
+      else
+        return ForgotVerifyPasswordResponse.fromJson(response.data['message']);
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      var e = error;
+      if (error is DioError) {
+        e = getErrorMsg(e.type);
+      }
+    }
+  }
+
+  Future<ResetPasswordResponse> resetPasswordResponse(
+      String password) async {
+    final map = {
+      "password": password};
+    try {
+      Response response =
+      await _dioClient.post("/resetpassword", data: map);
+      var data = json.decode(response.toString());
+      if (data['success'] == true)
+        return ResetPasswordResponse.fromJson(data);
+      else
+        return ResetPasswordResponse.fromJson(response.data['message']);
+    } catch (error, stacktrace) {
+      print("Exception occured: $error stackTrace: $stacktrace");
+      var e = error;
+      if (error is DioError) {
+        e = getErrorMsg(e.type);
+      }
+    }
+  }
+
 
   String getErrorMsg(DioErrorType type) {
     switch (type) {

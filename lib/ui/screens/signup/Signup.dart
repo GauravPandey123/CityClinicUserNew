@@ -1,4 +1,5 @@
 import 'package:city_clinic_user/ui/screens/BottomTabsScreen.dart';
+import 'package:city_clinic_user/ui/screens/login/Login-Screen.dart';
 import 'package:city_clinic_user/ui/screens/signup/VerifyOtpDialog.dart';
 import 'package:city_clinic_user/ui/screens/signup/bloc/SignUpBloc.dart';
 import 'package:city_clinic_user/utils/AppImages.dart';
@@ -196,7 +197,11 @@ class _SignUpState extends State<SignUp> {
                               ),
                             ),
                             InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => LoginScreen()));
+                                },
                               child: Container(
                                 margin: EdgeInsets.only(top: 6.0),
                                 child: Text(

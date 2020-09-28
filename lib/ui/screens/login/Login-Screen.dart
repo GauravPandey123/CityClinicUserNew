@@ -1,4 +1,4 @@
-import 'package:city_clinic_user/ui/screens/ForgotPasswordDialog.dart';
+import 'package:city_clinic_user/ui/screens/forgotpassword/ForgotPasswordDialog.dart';
 import 'package:city_clinic_user/ui/screens/OtpScreenDialog.dart';
 import 'package:city_clinic_user/ui/screens/login/LoginBloc.dart';
 import 'package:city_clinic_user/utils/AppRelatedText.dart';
